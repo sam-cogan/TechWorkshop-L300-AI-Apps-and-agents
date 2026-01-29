@@ -45,27 +45,16 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Create .env file
+      - name: Create .env file and deploy agent
         working-directory: ./src
         run: |
           echo "${{ secrets.ENV }}" > .env
-
-      - name: Set environment variables
-        working-directory: ./src
-        run: |
-          # Parse .env file and export to GITHUB_ENV
-          while IFS='=' read -r key value; do
-            # Skip empty lines and comments
-            [[ -z "$key" || "$key" =~ ^#.* ]] && continue
-            # Remove quotes from value if present
-            value=$(echo "$value" | sed -e 's/^"//' -e 's/"$//')
-            # Export to GITHUB_ENV
-            echo "${key}=${value}" >> $GITHUB_ENV
-          done < .env
-
-      - name: Deploy Cart Manager Agent
-        working-directory: ./src/app/agents
-        run: |
+          # Export all environment variables from .env file
+          set -a
+          source .env
+          set +a
+          # Run the Python script
+          cd app/agents
           python cartManagerAgent_initializer.py
 
       - name: Azure Logout
