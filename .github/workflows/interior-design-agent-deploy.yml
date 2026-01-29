@@ -49,13 +49,20 @@ jobs:
         working-directory: ./src
         run: |
           echo "${{ secrets.ENV }}" > .env
-          # Export all environment variables from .env file
-          set -a
-          source .env
-          set +a
-          # Run the Python script
-          cd app/agents
-          python interiorDesignAgent_initializer.py
+          # Use Python to load .env and run the script
+          python -c "
+import os
+from dotenv import load_dotenv
+load_dotenv()
+# Set environment variables for the current process and subprocesses
+for key, value in os.environ.items():
+    os.environ[key] = value
+# Now run the actual script
+import sys
+sys.path.insert(0, 'app/agents')
+os.chdir('app/agents')
+exec(open('interiorDesignAgent_initializer.py').read())
+"
 
       - name: Azure Logout
         if: always()
