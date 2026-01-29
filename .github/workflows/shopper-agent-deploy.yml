@@ -53,7 +53,7 @@ jobs:
       - name: Deploy Shopper Agent
         working-directory: ./src
         run: |
-          python << 'PYTHON_SCRIPT'
+          cat > run_agent.py << 'EOF'
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -61,7 +61,8 @@ import sys
 sys.path.insert(0, 'app/agents')
 os.chdir('app/agents')
 exec(open('shopperAgent_initializer.py').read())
-PYTHON_SCRIPT
+EOF
+          python run_agent.py
 
       - name: Azure Logout
         if: always()
