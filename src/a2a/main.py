@@ -20,6 +20,11 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Enable detailed logging for agent framework to see function calls
+logging.getLogger('semantic_kernel').setLevel(logging.INFO)
+logging.getLogger('semantic_kernel.kernel').setLevel(logging.INFO)
+logging.getLogger('semantic_kernel.functions').setLevel(logging.INFO)
+
 # Global variables for cleanup
 httpx_client: httpx.AsyncClient = None
 a2a_server: A2AServer = None
