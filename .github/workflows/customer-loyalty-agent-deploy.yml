@@ -53,8 +53,17 @@ jobs:
           echo "${{ secrets.ENV }}" > .env
 
       - name: Set environment variables
+        working-directory: ./src
         run: |
-          echo "${{ secrets.ENV }}" >> $GITHUB_ENV
+          # Parse .env file and export to GITHUB_ENV
+          while IFS='=' read -r key value; do
+            # Skip empty lines and comments
+            [[ -z "$key" || "$key" =~ ^#.* ]] && continue
+            # Remove quotes from value if present
+            value=$(echo "$value" | sed -e 's/^"//' -e 's/"$//')
+            # Export to GITHUB_ENV
+            echo "${key}=${value}" >> $GITHUB_ENV
+          done < .env
 
       - name: Deploy Customer Loyalty Agent
         working-directory: ./src/app/agents
