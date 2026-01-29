@@ -45,12 +45,20 @@ if len(sys.argv) < 2:
 
 agent_script = sys.argv[1]
 
-# Change to agents directory and run the script
+# Change to agents directory
 agents_dir = os.path.join(script_dir, 'app', 'agents')
 os.chdir(agents_dir)
 sys.path.insert(0, agents_dir)
 
-# Execute the agent initializer script
+# Get the full path to the agent script
+agent_script_path = os.path.join(agents_dir, agent_script)
+
+# Execute the agent initializer script with proper globals including __file__
 print(f"Executing {agent_script}...")
+exec_globals = {
+    '__file__': agent_script_path,
+    '__name__': '__main__',
+    '__builtins__': __builtins__,
+}
 with open(agent_script, 'r') as f:
-    exec(f.read())
+    exec(f.read(), exec_globals)
