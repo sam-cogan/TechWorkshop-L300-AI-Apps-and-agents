@@ -47,24 +47,23 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Create .env file and deploy agent
+      - name: Create .env file
         working-directory: ./src
         run: |
           echo "${{ secrets.ENV }}" > .env
-          # Use Python to load .env and run the script
-          python -c "
+
+      - name: Deploy Handoff Agent
+        working-directory: ./src
+        run: |
+          python << 'PYTHON_SCRIPT'
 import os
 from dotenv import load_dotenv
 load_dotenv()
-# Set environment variables for the current process and subprocesses
-for key, value in os.environ.items():
-    os.environ[key] = value
-# Now run the actual script
 import sys
 sys.path.insert(0, 'app/agents')
 os.chdir('app/agents')
 exec(open('handoffAgent_initializer.py').read())
-"
+PYTHON_SCRIPT
 
       - name: Azure Logout
         if: always()
