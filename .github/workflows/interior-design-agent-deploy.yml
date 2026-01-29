@@ -48,7 +48,11 @@ jobs:
       - name: Create .env file
         working-directory: ./src
         run: |
-          echo "${{ secrets.ENV }}" > .env
+          cat <<'ENVFILE' > .env
+          ${{ secrets.ENV }}
+          ENVFILE
+          echo "Created .env file with $(wc -l < .env) lines"
+          head -n 3 .env
 
       - name: Deploy Interior Design Agent
         working-directory: ./src
