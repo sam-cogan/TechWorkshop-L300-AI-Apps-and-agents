@@ -50,6 +50,10 @@ jobs:
         run: |
           echo "${{ secrets.ENV }}" > .env
 
+      - name: Set environment variables
+        run: |
+          echo "${{ secrets.ENV }}" >> $GITHUB_ENV
+
       - name: Deploy Shopper Agent
         working-directory: ./src/app/agents
         run: |
