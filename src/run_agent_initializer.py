@@ -6,8 +6,17 @@ import os
 import sys
 from dotenv import load_dotenv
 
-# Load environment variables first
-load_dotenv()
+# Get the script directory (src)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Load environment variables from src/.env
+env_path = os.path.join(script_dir, '.env')
+load_dotenv(env_path)
+
+# Verify environment variables are loaded
+if not os.getenv('COSMOS_ENDPOINT'):
+    print("ERROR: COSMOS_ENDPOINT not found after loading .env")
+    sys.exit(1)
 
 # Get the agent script name from command line argument
 if len(sys.argv) < 2:
@@ -17,7 +26,7 @@ if len(sys.argv) < 2:
 agent_script = sys.argv[1]
 
 # Change to agents directory and run the script
-agents_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app', 'agents')
+agents_dir = os.path.join(script_dir, 'app', 'agents')
 os.chdir(agents_dir)
 sys.path.insert(0, agents_dir)
 
