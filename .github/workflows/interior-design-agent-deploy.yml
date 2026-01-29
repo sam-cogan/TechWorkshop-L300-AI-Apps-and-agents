@@ -53,16 +53,7 @@ jobs:
       - name: Deploy Interior Design Agent
         working-directory: ./src
         run: |
-          cat > run_agent.py << 'EOF'
-import os
-from dotenv import load_dotenv
-load_dotenv()
-import sys
-sys.path.insert(0, 'app/agents')
-os.chdir('app/agents')
-exec(open('interiorDesignAgent_initializer.py').read())
-EOF
-          python run_agent.py
+          python run_agent_initializer.py interiorDesignAgent_initializer.py
 
       - name: Azure Logout
         if: always()

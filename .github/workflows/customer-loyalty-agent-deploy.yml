@@ -55,16 +55,7 @@ jobs:
       - name: Deploy Customer Loyalty Agent
         working-directory: ./src
         run: |
-          cat > run_agent.py << 'EOF'
-import os
-from dotenv import load_dotenv
-load_dotenv()
-import sys
-sys.path.insert(0, 'app/agents')
-os.chdir('app/agents')
-exec(open('customerLoyaltyAgent_initializer.py').read())
-EOF
-          python run_agent.py
+          python run_agent_initializer.py customerLoyaltyAgent_initializer.py
 
       - name: Azure Logout
         if: always()

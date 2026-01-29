@@ -55,16 +55,7 @@ jobs:
       - name: Deploy Handoff Agent
         working-directory: ./src
         run: |
-          cat > run_agent.py << 'EOF'
-import os
-from dotenv import load_dotenv
-load_dotenv()
-import sys
-sys.path.insert(0, 'app/agents')
-os.chdir('app/agents')
-exec(open('handoffAgent_initializer.py').read())
-EOF
-          python run_agent.py
+          python run_agent_initializer.py handoffAgent_initializer.py
 
       - name: Azure Logout
         if: always()
